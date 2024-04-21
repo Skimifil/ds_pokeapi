@@ -7,9 +7,9 @@ services:
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: dota_tournaments
+      MYSQL_DATABASE: db_pokeapi
       MYSQL_USER: myuser
-      MYSQL_PASSWORD: db_pokeapi
+      MYSQL_PASSWORD: mypassword
     volumes:
       - ./mysql/db/dados:/var/lib/mysql
     ports:

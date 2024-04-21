@@ -1,5 +1,5 @@
-from src.connect_api import connect_api
+from src.utils import *
 
 if __name__ == '__main__':
-    teste = connect_api('https://pokeapi.co/api/v2/pokemon/?limit=1')
-    print(teste)
+    #print(get_pokemon_from_api())
+    print(get_abilities_from_api('https://pokeapi.co/api/v2/pokemon/1/'))
