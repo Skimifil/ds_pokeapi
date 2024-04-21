@@ -3,7 +3,6 @@
 
 ### User files ###
 docker/mysql/mysql/
-src/config.py
 .idea
 
 
