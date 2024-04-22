@@ -4,18 +4,18 @@ import os
 
 def configurar_logger(nome_logger, nome_arquivo):
     """
-        Configura um logger para registrar mensagens em um arquivo de log.
+        Configures a logger to record messages in a log file.
 
-        Parâmetros:
-        - nome_logger (str): O nome do logger a ser configurado.
-        - nome_arquivo (str): O nome do arquivo de log a ser criado e usado para registrar mensagens.
+        Parameters:
+        - logger_name (str): The name of the logger to be configured.
+        - file_name (str): The name of the log file to be created and used for logging messages.
 
-        Retorna:
-        - logging.Logger: Um objeto de logger configurado para registrar mensagens em um arquivo.
+        Returns:
+        - logging.Logger: A configured logger object to record messages in a file.
 
-        Exemplo:
-            logger = configurar_logger('meu_logger', 'meu_arquivo.log')
-            logger.info("Este é um exemplo de mensagem de log.")
+        Example:
+            logger = configure_logger('my_logger', 'my_file.log')
+            logger.info("This is an example of a log message.")
     """
     # Caminho absoluto para a pasta 'logs' na raiz do projeto
     caminho_logs = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'logs'))

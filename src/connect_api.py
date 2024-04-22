@@ -1,5 +1,6 @@
 import requests
 from src.logger import configurar_logger
+from src.utils import alerta
 
 logger_api_connection = configurar_logger("api_connection",
                                           "api_connection.log")
@@ -28,4 +29,5 @@ def connect_api(url):
 
     except Exception as e:
         logger_api_connection.error(f"[connect_api] Error connecting to API, error: {e}.")
+        alerta(f"[connect_api] Error connecting to API, error: {e}.")
         return f"[connect_api] Error connecting to API, error: {e}."

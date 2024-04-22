@@ -1,6 +1,7 @@
 import mysql.connector
 from src.config import MYSQL_CONFIG
 from src.logger import configurar_logger
+from src.utils import alerta
 
 
 logger_db_connect = configurar_logger("connection_db_mysql", "connection_db_mysql.log")
@@ -35,6 +36,7 @@ def connect_to_mysql():
 
     except mysql.connector.Error as e:
         logger_db_connect.error(f"[connect_to_mysql] Error on connection to MySQL: {e}")
+        alerta(f"[connect_to_mysql] Error on connection to MySQL: {e}")
         print(f"[connect_to_mysql] Error on connection to MySQL: {e}")
 
 

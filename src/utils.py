@@ -5,101 +5,142 @@ from src.connect_database import *
 
 
 def get_all_pokemons_from_api():
+    """
+    Get all pokemons from API.
+    :return: A list of all pokemons.
+    Exemple: get_all_pokemons_from_api()
+    """
     try:
-        data = connect_api(f'https://pokeapi.co/api/v2/pokemon2/?limit=2')
+        data = connect_api(f'https://pokeapi.co/api/v2/pokemon/?limit=2')
         return data[0]['url']
     except Exception as e:
         alerta(e)
 
 
 def get_pokemon_info(endpoint_poki):
-    data = connect_api(endpoint_poki)
+    """
+    Get pokemon info.
+    :param endpoint_poki: (str) URL of the pokemon infos.
+    :return: All the information of the pokemons.
+    Exemple: get_pokemon_info('https://pokeapi.co/api/v2/pokemon/1')
+    """
+    try:
 
-    podemon_id = int(endpoint_poki.split('/')[-2])
-    pokemon_name = data['name']
-    pokemon_height = data['height']
-    pokemon_weight = data['weight']
+        data = connect_api(endpoint_poki)
 
-    results = [{
-        'pokemon_id': podemon_id,
-        'name': pokemon_name,
-        'height': pokemon_height,
-        'weight': pokemon_weight
-    }]
+        podemon_id = int(endpoint_poki.split('/')[-2])
+        pokemon_name = data['name']
+        pokemon_height = data['height']
+        pokemon_weight = data['weight']
 
-    return results
+        results = [{
+            'pokemon_id': podemon_id,
+            'name': pokemon_name,
+            'height': pokemon_height,
+            'weight': pokemon_weight
+        }]
+
+        return results
+    except Exception as e:
+        alerta(e)
 
 
 def get_abilities_from_api(endpoint_pok):
-    data = connect_api(endpoint_pok)
-    data_abilities = data['abilities']
+    """
+    Get abilities of the pokemons.
+    :param endpoint_pok: (str) URL of the pokemon infos.
+    :return: All the abilities of the pokemons.
+    Exemple: get_abilities_from_api('https://pokeapi.co/api/v2/abilities/1')
+    """
+    try:
 
-    podemon_id = int(endpoint_pok.split('/')[-2])
+        data = connect_api(endpoint_pok)
+        data_abilities = data['abilities']
 
-    results = []
-    for ab in data_abilities:
-        abilitie_name = ab['ability']['name']
-        abilitie_url = ab['ability']['url']
-        abilitie_id_url = abilitie_url.split('/')[-2]
+        podemon_id = int(endpoint_pok.split('/')[-2])
 
-        if isinstance(abilitie_url, str):
-            abilitie_urls = [abilitie_url]
+        results = []
+        for ab in data_abilities:
+            abilitie_name = ab['ability']['name']
+            abilitie_url = ab['ability']['url']
+            abilitie_id_url = abilitie_url.split('/')[-2]
 
-        for url in abilitie_urls:
-            get_effect = connect_api(url)
-            data_effect = get_effect['effect_entries'][0]['effect']
+            if isinstance(abilitie_url, str):
+                abilitie_urls = [abilitie_url]
 
-            json_data = {
-                'abilitie_id': abilitie_id_url,
-                'name': abilitie_name,
-                'effect': data_effect,
-                'pokemon_id': podemon_id
-            }
+            for url in abilitie_urls:
+                get_effect = connect_api(url)
+                data_effect = get_effect['effect_entries'][0]['effect']
 
-            results.append(json_data)
+                json_data = {
+                    'abilitie_id': abilitie_id_url,
+                    'name': abilitie_name,
+                    'effect': data_effect,
+                    'pokemon_id': podemon_id
+                }
 
-    return results
+                results.append(json_data)
+
+        return results
+    except Exception as e:
+        alerta(e)
 
 
 def get_moves_from_api(endpoint_pok):
-    data = connect_api(endpoint_pok)
-    data_moves = data.get('moves', [])
+    """
+    Get moves of the pokemons.
+    :param endpoint_pok: (str) URL of the pokemon infos.
+    :return: Get the information of the pokemons moves.
+    Exemple: get_moves_from_api('https://pokeapi.co/api/v2/moves/1')
+    """
+    try:
 
-    pokemon_id = int(endpoint_pok.split('/')[-2])
+        data = connect_api(endpoint_pok)
+        data_moves = data.get('moves', [])
 
-    results = []
+        pokemon_id = int(endpoint_pok.split('/')[-2])
 
-    for mv in data_moves:
-        move_name = mv['move']['name']
-        move_url = mv['move']['url']
-        move_id_url = move_url.split('/')[-2]
+        results = []
 
-        try:
-            get_effect = connect_api(move_url)
+        for mv in data_moves:
+            move_name = mv['move']['name']
+            move_url = mv['move']['url']
+            move_id_url = move_url.split('/')[-2]
 
-            # Verifique se há 'effect_entries' e se a lista não está vazia
-            if 'effect_entries' in get_effect and get_effect['effect_entries']:
-                effect_entry = get_effect['effect_entries'][0]
-                data_effect = effect_entry.get('effect', 'Null')
-            else:
-                data_effect = 'Null'
+            try:
+                get_effect = connect_api(move_url)
 
-            json_data = {
-                'move_id': move_id_url,
-                'name': move_name,
-                'effect': data_effect,
-                'pokemon_id': pokemon_id
-            }
+                # Verifique se há 'effect_entries' e se a lista não está vazia
+                if 'effect_entries' in get_effect and get_effect['effect_entries']:
+                    effect_entry = get_effect['effect_entries'][0]
+                    data_effect = effect_entry.get('effect', 'Null')
+                else:
+                    data_effect = 'Null'
 
-            results.append(json_data)
+                json_data = {
+                    'move_id': move_id_url,
+                    'name': move_name,
+                    'effect': data_effect,
+                    'pokemon_id': pokemon_id
+                }
 
-        except Exception as e:
-            print(f"Erro ao conectar-se à API: {e}")
+                results.append(json_data)
 
-    return results
+            except Exception as e:
+                print(f"Erro ao conectar-se à API: {e}")
+
+        return results
+    except Exception as e:
+        alerta(e)
 
 
 def alerta(erro):
+    """
+    Alert error on the screen.
+    :param erro: (str) Error message.
+    :return: Error message.
+    Exemple: alerta('Error for connect to the API')
+    """
     return notification.notify(
         title='Pokemon API',
         message=f'An error occurred while connecting to the Pokemon API: {erro}',

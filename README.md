@@ -6,7 +6,7 @@ Coleta os dados da API [PokeAPI](https://pokeapi.co/) para tratamento, armazenam
 
 ## Fluxo
 1. Conecta na API
-2. Através dos endpoints, coleta as informações dos times, sendo:
+2. Através dos endpoints, coleta as informações dos Pokemons, sendo:
    - Pokemon
    - Habilidades
    - Sons

@@ -26,4 +26,4 @@ networks:
       config:
         - subnet: 172.15.0.0/16
 
-# Lets UP de container with the command: docker-compose up -d
+# Lets UP the container with the command: docker-compose up -d
