@@ -68,10 +68,10 @@ erDiagram
         INT move_id FK
     }
 
-    pokemon ||--o{ pokemon_abilities : "has"
-    pokemon ||--o{ pokemon_moves : "has"
-    abilities ||--o{ pokemon_abilities : "has"
-    moves ||--o{ pokemon_moves : "has"
+    pokemon ||--o{ pokemon_abilities : ""
+    pokemon ||--o{ pokemon_moves : ""
+    abilities ||--o{ pokemon_abilities : ""
+    moves ||--o{ pokemon_moves : ""
 ```
 ## Endpoints de referência na API
 [Pokemons](https://pokeapi.co/api/v2/pokemon/)

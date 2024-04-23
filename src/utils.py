@@ -4,6 +4,13 @@ from src.connect_database import *
 
 
 def get_id_from_url(url):
+    """
+    Get the id in the URL pass in the parameter.
+    :param url: (str) The url to get the id from.
+    :return: The ID of the url passed in.
+
+    Exemple: get_id_from_url(https://url.com.br)
+    """
     return int(url.split('/')[-2])
 
 
