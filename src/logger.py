@@ -1,5 +1,6 @@
-import logging
 import os
+import logging
+from plyer import notification
 
 
 def configurar_logger(nome_logger, nome_arquivo):
@@ -38,3 +39,18 @@ def configurar_logger(nome_logger, nome_arquivo):
 
     logger.addHandler(file_handler)
     return logger
+
+
+def alerta(erro):
+    """
+    Alert error on the screen.
+    :param erro: (str) Error message.
+    :return: Error message.
+    Exemple: alerta('Error for connect to the API')
+    """
+    return notification.notify(
+        title='Pokemon API',
+        message=f'An error occurred while connecting to the Pokemon API: {erro}',
+        app_name='Pokeapi',
+        timeout=10
+    )

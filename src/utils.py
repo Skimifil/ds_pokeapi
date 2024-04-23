@@ -1,7 +1,10 @@
-from plyer import notification
-from src.logger import configurar_logger
+from src.logger import *
 from src.connect_api import connect_api
 from src.connect_database import *
+
+
+def get_id_from_url(url):
+    return int(url.split('/')[-2])
 
 
 def get_all_pokemons_from_api():
@@ -57,13 +60,11 @@ def get_abilities_from_api(endpoint_pok):
         data = connect_api(endpoint_pok)
         data_abilities = data['abilities']
 
-        podemon_id = int(endpoint_pok.split('/')[-2])
-
         results = []
         for ab in data_abilities:
             abilitie_name = ab['ability']['name']
             abilitie_url = ab['ability']['url']
-            abilitie_id_url = abilitie_url.split('/')[-2]
+            abilitie_id_url = get_id_from_url(abilitie_url)
 
             if isinstance(abilitie_url, str):
                 abilitie_urls = [abilitie_url]
@@ -75,8 +76,7 @@ def get_abilities_from_api(endpoint_pok):
                 json_data = {
                     'abilitie_id': abilitie_id_url,
                     'name': abilitie_name,
-                    'effect': data_effect,
-                    'pokemon_id': podemon_id
+                    'effect': data_effect
                 }
 
                 results.append(json_data)
@@ -98,14 +98,12 @@ def get_moves_from_api(endpoint_pok):
         data = connect_api(endpoint_pok)
         data_moves = data.get('moves', [])
 
-        pokemon_id = int(endpoint_pok.split('/')[-2])
-
         results = []
 
         for mv in data_moves:
             move_name = mv['move']['name']
             move_url = mv['move']['url']
-            move_id_url = move_url.split('/')[-2]
+            move_id_url = get_id_from_url(move_url)
 
             try:
                 get_effect = connect_api(move_url)
@@ -120,8 +118,7 @@ def get_moves_from_api(endpoint_pok):
                 json_data = {
                     'move_id': move_id_url,
                     'name': move_name,
-                    'effect': data_effect,
-                    'pokemon_id': pokemon_id
+                    'effect': data_effect
                 }
 
                 results.append(json_data)
@@ -132,18 +129,3 @@ def get_moves_from_api(endpoint_pok):
         return results
     except Exception as e:
         alerta(e)
-
-
-def alerta(erro):
-    """
-    Alert error on the screen.
-    :param erro: (str) Error message.
-    :return: Error message.
-    Exemple: alerta('Error for connect to the API')
-    """
-    return notification.notify(
-        title='Pokemon API',
-        message=f'An error occurred while connecting to the Pokemon API: {erro}',
-        app_name='Pokeapi',
-        timeout=10
-    )

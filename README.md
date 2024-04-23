@@ -35,5 +35,43 @@ MYSQL_CONFIG = {
 }
 ```
 
+## Infraestrutura do Banco de Dados Pokémon
+
+```mermaid
+erDiagram
+    pokemon {
+        INT pokemon_id PK
+        VARCHAR name
+        INT height
+        INT weight
+    }
+
+    abilities {
+        INT ability_id PK
+        VARCHAR name
+        MEDIUMTEXT effect
+    }
+
+    moves {
+        INT move_id PK
+        VARCHAR name
+        MEDIUMTEXT effect
+    }
+
+    pokemon_abilities {
+        INT pokemon_id FK
+        INT ability_id FK
+    }
+
+    pokemon_moves {
+        INT pokemon_id FK
+        INT move_id FK
+    }
+
+    pokemon ||--o{ pokemon_abilities : "has"
+    pokemon ||--o{ pokemon_moves : "has"
+    abilities ||--o{ pokemon_abilities : "has"
+    moves ||--o{ pokemon_moves : "has"
+```
 ## Endpoints de referência na API
 [Pokemons](https://pokeapi.co/api/v2/pokemon/)
