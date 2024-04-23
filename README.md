@@ -39,17 +39,17 @@ MYSQL_CONFIG = {
 
 ```mermaid
 erDiagram
+    abilities {
+        INT ability_id PK
+        VARCHAR name
+        MEDIUMTEXT effect
+    }
+    
     pokemon {
         INT pokemon_id PK
         VARCHAR name
         INT height
         INT weight
-    }
-
-    abilities {
-        INT ability_id PK
-        VARCHAR name
-        MEDIUMTEXT effect
     }
 
     moves {
