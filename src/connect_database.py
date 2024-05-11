@@ -1,7 +1,6 @@
 import mysql.connector
 from src.config import MYSQL_CONFIG
-from src.logger import configurar_logger
-from src.utils import alerta
+from src.logger import *
 
 
 logger_db_connect = configurar_logger("connection_db_mysql", "connection_db_mysql.log")

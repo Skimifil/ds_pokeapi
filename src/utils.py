@@ -1,6 +1,10 @@
 from src.logger import *
 from src.connect_api import connect_api
 from src.connect_database import *
+from src.config import QUERY_INSERT
+
+
+logger_app_functions = configurar_logger("app_functions", "app_functions.log")
 
 
 def get_id_from_url(url):
@@ -50,8 +54,11 @@ def get_pokemon_info(endpoint_poki):
             'weight': pokemon_weight
         }]
 
+        logger_app_functions.info(f'[get_pokemon_info] Create a JSON with the information about the Pokemons: {results}')
+
         return results
     except Exception as e:
+        logger_app_functions.error(f'[get_pokemon_info] An error has occurred: {e} ')
         alerta(e)
 
 
@@ -64,6 +71,7 @@ def get_abilities_from_api(endpoint_pok):
     """
     try:
 
+        pokemon_id = int(endpoint_pok.split('/')[-2])
         data = connect_api(endpoint_pok)
         data_abilities = data['abilities']
 
@@ -86,10 +94,20 @@ def get_abilities_from_api(endpoint_pok):
                     'effect': data_effect
                 }
 
+                pokemon_abilities_json_data = {
+                    'pokemon_id': pokemon_id,
+                    'ability_id': abilitie_id_url,
+                }
+                query_pokemon_abilities = QUERY_INSERT['pokemon_abilities']
+                store_aux_tables(pokemon_abilities_json_data, query_pokemon_abilities)
+
                 results.append(json_data)
+        logger_app_functions.info(
+            f'[get_abilities_from_api] Create a JSON with the information about the Pokemons abilities: {results}')
 
         return results
     except Exception as e:
+        logger_app_functions.error(f'[get_abilities_from_api] An error has occurred: {e} ')
         alerta(e)
 
 
@@ -102,6 +120,7 @@ def get_moves_from_api(endpoint_pok):
     """
     try:
 
+        pokemon_id = int(endpoint_pok.split('/')[-2])
         data = connect_api(endpoint_pok)
         data_moves = data.get('moves', [])
 
@@ -128,11 +147,81 @@ def get_moves_from_api(endpoint_pok):
                     'effect': data_effect
                 }
 
+                pokemon_moves_json_data = {
+                    'pokemon_id': pokemon_id,
+                    'move_id': move_id_url,
+                }
+                query_pokemon_moves = QUERY_INSERT['pokemon_moves']
+                store_aux_tables(pokemon_moves_json_data, query_pokemon_moves)
+
                 results.append(json_data)
 
             except Exception as e:
                 print(f"Erro ao conectar-se à API: {e}")
+                logger_app_functions.error(f'[get_moves_from_api] An error has occurred: {e} ')
+
+        logger_app_functions.info(
+            f'[get_moves_from_api] Create a JSON with the information about the Pokemons: {results}')
 
         return results
     except Exception as e:
+        logger_app_functions.error(f'[get_moves_from_api] An error has occurred: {e} ')
         alerta(e)
+
+
+def store_pokemon_data(data, database_client, query_insert):
+    """
+    Stores Pokemon data in a database.
+
+    :param data: (str) Pokemon data.
+    :param database_client: (str) Database client connection
+    :return: A message that the data was stored or not.
+
+    Exemple: stored_data = store_pokemon_data(data, database_client)
+    """
+    try:
+        # Preparando o cursor
+        cursor = database_client.cursor()
+
+        # Consulta SQL para inserir os dados na tabela pro_players
+        insert_query = query_insert
+
+        # Inserindo os dados
+        for pok in data:
+            cursor.execute(insert_query, pok)
+
+        # Commit das alterações
+        database_client.commit()
+
+        # Fechando o cursor e a conexão
+        cursor.close()
+
+        logger_app_functions.info(
+            f'[store_pokemon_data] Successfully stored {len(data)} Pokemon in database.')
+        return f'Successfully stored {len(data)} Pokemon in database'
+
+    except Exception as e:
+        logger_app_functions.error(f'[store_pokemon_data] Failed to store {len(data)} Pokemon in database: {e}')
+        return f'[store_pokemon_data] Failed to store {len(data)} Pokemon in database: {e}'
+
+
+def store_aux_tables(data, query):
+    """
+    Stores all the data from the Pokemon aux tables.
+    :param data:  (str) Pokemon data.
+    :param query: (str) The query to execute.
+    :return: A message that the data was stored or not.
+
+    Exemple: stored_data = store_aux_tables(data, query)
+    """
+    try:
+        in_client_db = connect_to_mysql()
+        store_pokemon_data(data, in_client_db, query)
+        disconnect_to_mysql(in_client_db)
+
+        logger_app_functions.info(
+            f'[store_aux_tables] Successfully stored {len(data)} Pokemon in aux database.')
+        return f'[store_aux_tables] Successfully stored {len(data)} Pokemon in aux database.'
+    except Exception as e:
+        logger_app_functions.error(f'[store_aux_tables] Failed to store {len(data)} Pokemon in aux database: {e}')
+        return f'[store_aux_tables] Failed to store {len(data)} Pokemon in aux database: {e}'
