@@ -12,14 +12,12 @@ CREATE TABLE pokemon (
 
 CREATE TABLE abilities (
     abilitie_id INT PRIMARY KEY,
-    name VARCHAR(255),
-    effect MEDIUMTEXT
+    name VARCHAR(255)
 );
 
 CREATE TABLE moves (
     move_id INT PRIMARY KEY,
-    name VARCHAR(255),
-    effect LONGTEXT
+    name VARCHAR(255)
 );
 
 CREATE TABLE pokemon_abilities (

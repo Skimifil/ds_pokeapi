@@ -9,14 +9,7 @@ Coleta os dados da API [PokeAPI](https://pokeapi.co/) para tratamento, armazenam
 2. Através dos endpoints, coleta as informações dos Pokemons, sendo:
    - Pokemon
    - Habilidades
-   - Sons
-   - Formas
-   - Indice dos jogos
    - Movimentos
-   - Espécie
-   - Sprites
-   - Status
-   - Tipos
 3. Armazena em um banco de dados
 4. Através de um Notebook Jupyter, faz a analise dos dados
 
@@ -42,7 +35,6 @@ erDiagram
     abilities {
         INT ability_id PK
         VARCHAR name
-        MEDIUMTEXT effect
     }
     
     pokemon {
@@ -55,7 +47,6 @@ erDiagram
     moves {
         INT move_id PK
         VARCHAR name
-        MEDIUMTEXT effect
     }
 
     pokemon_abilities {

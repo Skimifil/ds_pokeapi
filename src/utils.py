@@ -42,13 +42,13 @@ def get_pokemon_info(endpoint_poki):
 
         data = connect_api(endpoint_poki)
 
-        podemon_id = int(endpoint_poki.split('/')[-2])
+        pokemon_id = int(endpoint_poki.split('/')[-2])
         pokemon_name = data['name']
         pokemon_height = data['height']
         pokemon_weight = data['weight']
 
         results = [{
-            'pokemon_id': podemon_id,
+            'pokemon_id': pokemon_id,
             'name': pokemon_name,
             'height': pokemon_height,
             'weight': pokemon_weight
@@ -76,10 +76,12 @@ def get_abilities_from_api(endpoint_pok):
         data_abilities = data['abilities']
 
         results = []
+        results_aux = []
         for ab in data_abilities:
             abilitie_name = ab['ability']['name']
             abilitie_url = ab['ability']['url']
-            abilitie_id_url = get_id_from_url(abilitie_url)
+            #abilitie_id_url = get_id_from_url(abilitie_url)
+            abilitie_id_url = int(abilitie_url.split('/')[-2])
 
             if isinstance(abilitie_url, str):
                 abilitie_urls = [abilitie_url]
@@ -90,22 +92,21 @@ def get_abilities_from_api(endpoint_pok):
 
                 json_data = {
                     'abilitie_id': abilitie_id_url,
-                    'name': abilitie_name,
-                    'effect': data_effect
+                    'name': abilitie_name
+                    #'effect': data_effect
                 }
 
                 pokemon_abilities_json_data = {
                     'pokemon_id': pokemon_id,
-                    'ability_id': abilitie_id_url,
+                    'ability_id': abilitie_id_url
                 }
-                query_pokemon_abilities = QUERY_INSERT['pokemon_abilities']
-                store_aux_tables(pokemon_abilities_json_data, query_pokemon_abilities)
+                results_aux.append(pokemon_abilities_json_data)
 
                 results.append(json_data)
         logger_app_functions.info(
-            f'[get_abilities_from_api] Create a JSON with the information about the Pokemons abilities: {results}')
+            f'[get_abilities_from_api] Create a JSON with the information about the Pokemons abilities: {results} \n {results_aux}')
 
-        return results
+        return results, results_aux
     except Exception as e:
         logger_app_functions.error(f'[get_abilities_from_api] An error has occurred: {e} ')
         alerta(e)
@@ -125,11 +126,13 @@ def get_moves_from_api(endpoint_pok):
         data_moves = data.get('moves', [])
 
         results = []
+        results_aux = []
 
         for mv in data_moves:
             move_name = mv['move']['name']
             move_url = mv['move']['url']
-            move_id_url = get_id_from_url(move_url)
+            #move_id_url = get_id_from_url(move_url)
+            move_id_url = int(move_url.split('/')[-2])
 
             try:
                 get_effect = connect_api(move_url)
@@ -143,16 +146,15 @@ def get_moves_from_api(endpoint_pok):
 
                 json_data = {
                     'move_id': move_id_url,
-                    'name': move_name,
-                    'effect': data_effect
+                    'name': move_name
+                    #'effect': data_effect
                 }
 
                 pokemon_moves_json_data = {
                     'pokemon_id': pokemon_id,
-                    'move_id': move_id_url,
+                    'move_id': move_id_url
                 }
-                query_pokemon_moves = QUERY_INSERT['pokemon_moves']
-                store_aux_tables(pokemon_moves_json_data, query_pokemon_moves)
+                results_aux.append(pokemon_moves_json_data)
 
                 results.append(json_data)
 
@@ -163,7 +165,7 @@ def get_moves_from_api(endpoint_pok):
         logger_app_functions.info(
             f'[get_moves_from_api] Create a JSON with the information about the Pokemons: {results}')
 
-        return results
+        return results, results_aux
     except Exception as e:
         logger_app_functions.error(f'[get_moves_from_api] An error has occurred: {e} ')
         alerta(e)
@@ -173,6 +175,7 @@ def store_pokemon_data(data, database_client, query_insert):
     """
     Stores Pokemon data in a database.
 
+    :param query_insert: (str) Query for input data.
     :param data: (str) Pokemon data.
     :param database_client: (str) Database client connection
     :return: A message that the data was stored or not.
