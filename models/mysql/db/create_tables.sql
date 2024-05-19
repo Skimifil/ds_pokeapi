@@ -33,20 +33,3 @@ CREATE TABLE pokemon_moves (
     FOREIGN KEY (pokemon_id) REFERENCES pokemon(pokemon_id),
     FOREIGN KEY (move_id) REFERENCES moves(move_id)
 );
-
-DELIMITER //
-
-CREATE PROCEDURE add_pokemon_move(IN pokemon_id INT, IN move_id INT)
-BEGIN
-    -- Verificar se Pokémon e movimento existem antes de inserir na tabela de relacionamentos
-    IF EXISTS (SELECT 1 FROM pokemon WHERE pokemon_id = pokemon_id) AND
-       EXISTS (SELECT 1 FROM moves WHERE move_id = move_id) THEN
-        INSERT INTO pokemon_moves (pokemon_id, move_id)
-        VALUES (pokemon_id, move_id);
-    ELSE
-        SIGNAL SQLSTATE '45000'
-        SET MESSAGE_TEXT = 'Invalid pokemon_id or move_id';
-    END IF;
-END //
-
-DELIMITER ;

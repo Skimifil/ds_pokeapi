@@ -15,15 +15,15 @@ Coleta os dados da API [PokeAPI](https://pokeapi.co/) para tratamento, armazenam
 
 
 ## Pré-reqs
-É preciso ter uma banco de dados MySQL para armazenamento dos dados. Criei um 'docker-compose.yml' para subir um MySQL no Docker pra facilitar o trabalho em teste e homologação.
+É preciso ter uma banco de dados MySQL para armazenamento dos dados. Com isso nós temos um 'docker-compose.yml' para subir um MySQL no Docker pra facilitar o trabalho em teste e homologação.
 
-Com o banco funcional, crie o arquivo 'config.py' dentro da pasta 'src/' e adicione o trecho abaixo no arquivo (caso queira trocar os dados de acesso, lembre-se de avaliar o 'docker-compose.yml' também).
+Com o banco funcional, o arquivo 'config.py' dentro da pasta 'src/' possui o trecho abaixo (caso queira trocar os dados de acesso, lembre-se de avaliar o 'docker-compose.yml' também).
 
 ```shell
 MYSQL_CONFIG = {
     'MYSQLUSER': 'myuser',
     'MYSQLPASSWORD': 'mypassword',
-    'MYSQLSERVER': '172.19.0.2',
+    'MYSQLSERVER': '172.15.0.2',
     'MYSQLDB': 'db_pokeapi',
 }
 ```
@@ -66,3 +66,5 @@ erDiagram
 ```
 ## Endpoints de referência na API
 [Pokemons](https://pokeapi.co/api/v2/pokemon/)
+[Habilidades](https://pokeapi.co/api/v2/ability/)
+[Movimentos](https://pokeapi.co/api/v2/move/)
